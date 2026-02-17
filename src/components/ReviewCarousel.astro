@@ -1,0 +1,178 @@
+---
+import { getCollection } from 'astro:content'
+import { ui } from '../i18n/ui'
+import { useTranslations } from '../i18n/utils'
+
+interface Props {
+    lang: keyof typeof ui
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+
+const allReviews = await getCollection('reviews')
+const reviews = allReviews
+    .filter((review) => {
+        // Basic filtering if we wanted only reviews with text in current language,
+        // but for now we'll show all and just pick the right text field.
+        return true
+    })
+    .sort((a, b) => {
+        // Sort by date descending if available, otherwise random or by weight
+        return (
+            new Date(b.data.date || '').getTime() -
+            new Date(a.data.date || '').getTime()
+        )
+    })
+
+// Triple the reviews to ensure smooth infinite scroll even with few items
+const displayReviews = [...reviews, ...reviews, ...reviews]
+---
+
+<section class="py-24 bg-lunar-black relative overflow-hidden">
+    <div class="container mx-auto px-6 mb-12 text-center relative z-10">
+        <span
+            class="text-lunar-gold tracking-[0.2em] uppercase text-xs block mb-3"
+        >
+            {t('reviews.subtitle')}
+        </span>
+        <h2 class="text-4xl md:text-5xl font-serif text-lunar-white">
+            {t('reviews.title')}
+        </h2>
+    </div>
+
+    <div class="relative w-full overflow-hidden mask-gradient">
+        <div class="flex gap-6 animate-marquee w-max">
+            {
+                displayReviews.map((review) => (
+                    <div class="w-[350px] md:w-[450px] p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-lunar-gold/30 transition-colors duration-300 flex-shrink-0 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex text-lunar-gold">
+                                    {Array.from({
+                                        length: review.data.rating,
+                                    }).map(() => (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-4 w-4 fill-current"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    ))}
+                                </div>
+                                <span class="text-xs text-lunar-muted uppercase tracking-widest opacity-60">
+                                    {review.data.source}
+                                </span>
+                            </div>
+
+                            <p class="text-lunar-white/90 font-light leading-relaxed mb-6 italic">
+                                "
+                                {lang === 'sk'
+                                    ? review.body
+                                    : review.data.text_en || review.body}
+                                "
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-4 mt-auto pt-6 border-t border-white/5">
+                            <div class="flex flex-col">
+                                <span class="text-lunar-white font-medium text-sm">
+                                    {review.data.author}
+                                </span>
+                                <span class="text-lunar-muted text-xs">
+                                    {review.data.date}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+
+    <div class="text-center mt-12 relative z-10 px-6">
+        <a
+            href="https://maps.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block px-8 py-3 bg-transparent border border-lunar-gold text-lunar-gold hover:bg-lunar-gold hover:text-lunar-black transition-all duration-300 uppercase tracking-widest text-xs md:text-sm font-semibold"
+        >
+            {t('reviews.cta')}
+        </a>
+    </div>
+</section>
+
+<script>
+    function initMarquee() {
+        const container = document.querySelector(
+            '.animate-marquee',
+        ) as HTMLElement
+        if (container) {
+            let position = 0
+            let speed = 0.5 // Base speed
+            let targetSpeed = 0.5
+            let isHovering = false
+
+            function animate() {
+                // Stop if element is no longer in DOM (e.g. after navigation)
+                if (!document.body.contains(container)) return
+
+                // Smoothly adjust speed
+                if (isHovering) {
+                    speed *= 0.95 // Decelerate
+                    if (speed < 0.01) speed = 0
+                } else {
+                    speed += (targetSpeed - speed) * 0.05 // Accelerate back
+                }
+
+                position -= speed
+
+                // Check boundaries for infinite loop
+                const totalWidth = container.scrollWidth
+                const singleSetWidth = totalWidth / 3
+
+                if (Math.abs(position) >= singleSetWidth) {
+                    position += singleSetWidth
+                }
+
+                container.style.transform = `translateX(${position}px)`
+
+                requestAnimationFrame(animate)
+            }
+
+            container.addEventListener('mouseenter', () => {
+                isHovering = true
+            })
+
+            container.addEventListener('mouseleave', () => {
+                isHovering = false
+            })
+
+            // Start animation
+            requestAnimationFrame(animate)
+        }
+    }
+
+    // Run on initial load and after every navigation
+    document.addEventListener('astro:page-load', initMarquee)
+</script>
+
+<style>
+    .mask-gradient {
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent
+        );
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent
+        );
+    }
+</style>

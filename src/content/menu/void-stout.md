@@ -1,0 +1,17 @@
+﻿---
+slug: ''
+order: 2
+name: Guiness Stout (0.4l)
+name_en: Guinness Stout (0.4l)
+description_en: Guinness dark stout with notes of coffee and dark chocolate, creamy foam.
+price: 4.50€
+category: drinks
+subcategory: alcoholic
+allergens:
+  - gluten
+image: "../../assets/menu/guiness.avif"
+featured: false
+lang: sk
+---
+
+Guiness tmavý stout s tónmi kávy a horkej čokolády, krémová pena.

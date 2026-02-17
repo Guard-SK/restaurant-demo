@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets';
+import gallery1 from '../assets/gallery1.avif';
+import gallery2 from '../assets/gallery2.avif';
+import tartare from '../assets/menu/tartare.avif';
+import steak from '../assets/menu/steak.avif';
+import lemonade from '../assets/menu/lavender-lemonade.avif';
+import fondant from '../assets/menu/chocolate-fondant.avif';
+import salmon from '../assets/menu/salmon.avif';
+import gin from '../assets/menu/gin.avif';
+import { ui } from '../i18n/ui';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  text: {
+    title: string;
+    subtitle: string;
+  };
+  lang: keyof typeof ui;
+}
+
+const { text, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const images = [
+    { src: gallery1, alt: t('gallery.img.atmosphere'), large: true },
+    { src: tartare, alt: t('gallery.img.tartare'), large: false },
+    { src: lemonade, alt: t('gallery.img.lemonade'), large: false },
+    { src: gallery2, alt: t('gallery.img.bar'), large: true },
+    { src: steak, alt: t('gallery.img.steak'), large: false },
+    { src: gin, alt: t('gallery.img.gin'), large: false },
+    { src: fondant, alt: t('gallery.img.fondant'), large: false },
+    { src: salmon, alt: t('gallery.img.salmon'), large: false },
+];
+---
+
+<section id="galeria" class="py-24 bg-lunar-black relative overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-lunar-gold/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-lunar-gold/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+    <div class="container mx-auto px-6 max-w-7xl relative z-10">
+        <!-- Header -->
+        <div class="text-center mb-16 animate-fade-in-up">
+            <span class="text-lunar-gold tracking-[0.2em] uppercase text-xs block mb-3">{text.subtitle}</span>
+            <h2 class="text-4xl md:text-5xl font-serif text-lunar-white">{text.title}</h2>
+        </div>
+
+        <!-- Masonry Grid -->
+        <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+            {images.map((img, index) => (
+                <div 
+                    class="break-inside-avoid relative group overflow-hidden border border-white/5 bg-neutral-900/50 backdrop-blur-sm transition-all duration-500 hover:border-lunar-gold/30 hover:shadow-[0_0_30px_rgba(212,175,55,0.1)]"
+                    style={`animation-delay: ${index * 100}ms`}
+                >
+                    <div class="relative overflow-hidden">
+                        <Image 
+                            src={img.src} 
+                            alt={img.alt}
+                            width={img.large ? 800 : 600}
+                            class="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0"
+                        />
+                        
+                        <!-- Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-lunar-gold font-serif text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                {img.alt}
+                            </span>
+                        </div>
+                        
+                        <!-- Corner Accent -->
+                        <div class="absolute top-0 right-0 w-12 h-12 border-t border-r border-lunar-gold opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100 origin-top-right"></div>
+                        <div class="absolute bottom-0 left-0 w-12 h-12 border-b border-l border-lunar-gold opacity-0 group-hover:opacity-100 transition-all duration-500 scale-50 group-hover:scale-100 origin-bottom-left"></div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s ease-out forwards;
+    }
+    
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

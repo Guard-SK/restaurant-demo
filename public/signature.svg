@@ -1,0 +1,4 @@
+<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20,60 Q50,10 80,60 T140,60 T200,60" fill="none" stroke="#d4af37" stroke-width="2" />
+  <text x="100" y="80" text-anchor="middle" fill="#d4af37" font-family="cursive" font-size="24">Chef's Sig</text>
+</svg>
