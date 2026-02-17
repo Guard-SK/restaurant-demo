@@ -374,7 +374,7 @@ const groupedItems = computed(() => {
           <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" @click="closeModal" @touchmove.prevent></div>
           
           <!-- Modal Content -->
-          <div class="relative bg-lunar-black border border-gray-800 w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] shadow-2xl flex flex-col md:flex-row animate-scale-up overflow-hidden rounded-lg">
+          <div class="relative bg-lunar-black border border-gray-800 w-full max-w-4xl h-[85vh] md:h-auto md:max-h-[90vh] shadow-2xl flex flex-col md:flex-row animate-scale-up overflow-hidden rounded-lg">
             
             <!-- Close Button -->
             <button @click="closeModal" class="absolute top-4 right-4 z-20 p-2 text-white bg-black/50 hover:bg-black/80 rounded-full backdrop-blur-md transition-all duration-300">
@@ -384,7 +384,7 @@ const groupedItems = computed(() => {
             </button>
 
             <!-- Modal Image -->
-            <div class="w-full md:w-1/2 h-48 md:h-auto shrink-0 relative bg-neutral-900 overflow-hidden">
+            <div class="w-full md:w-1/2 flex-1 min-h-[12rem] md:flex-none md:h-auto shrink-0 relative bg-neutral-900 overflow-hidden">
                <img 
                  v-if="selectedItem.data.image" 
                  :src="typeof selectedItem.data.image === 'string' ? selectedItem.data.image : selectedItem.data.image.src" 
@@ -396,7 +396,7 @@ const groupedItems = computed(() => {
             </div>
 
             <!-- Modal Details -->
-            <div class="w-full md:w-1/2 flex flex-col h-full overflow-hidden">
+            <div class="w-full md:w-1/2 flex flex-col h-auto max-h-[60%] md:h-full md:max-h-full overflow-hidden bg-lunar-black z-10">
               <div class="p-6 md:p-12 flex flex-col h-full overflow-hidden">
                   <!-- Header Section (Fixed) -->
                   <div class="shrink-0 mb-6">
