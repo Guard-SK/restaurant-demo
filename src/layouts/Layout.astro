@@ -109,7 +109,11 @@ const t = useTranslations(lang as keyof typeof ui)
 						{lang === 'sk' ? 'EN' : 'SK'}
 					</a>
 
-					<button id="mobile-menu-btn" class="text-lunar-white p-2">
+					<button
+						id="mobile-menu-btn"
+						class="text-lunar-white p-2"
+						aria-label="Open Menu"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -137,6 +141,7 @@ const t = useTranslations(lang as keyof typeof ui)
 			<button
 				id="close-menu-btn"
 				class="absolute top-8 right-6 text-lunar-white"
+				aria-label="Close Menu"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -188,6 +193,7 @@ const t = useTranslations(lang as keyof typeof ui)
 		<a
 			href="#rezervacia"
 			class="transform md:hidden fixed bottom-6 right-6 z-30 bg-lunar-gold text-lunar-black p-4 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center animate-bounce-slow active:scale-90 active:shadow-inner"
+			aria-label="Book a Table"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

@@ -108,50 +108,95 @@ const displayReviews = [...reviews, ...reviews, ...reviews]
         const container = document.querySelector(
             '.animate-marquee',
         ) as HTMLElement
-        if (container) {
-            let position = 0
-            let speed = 0.5 // Base speed
-            let targetSpeed = 0.5
-            let isHovering = false
+        if (!container) return
 
-            function animate() {
-                // Stop if element is no longer in DOM (e.g. after navigation)
-                if (!document.body.contains(container)) return
+        let position = 0
+        let speed = 0.5 // Base speed
+        let targetSpeed = 0.5
+        let isHovering = false
+        let animationFrameId: number
 
-                // Smoothly adjust speed
-                if (isHovering) {
-                    speed *= 0.95 // Decelerate
-                    if (speed < 0.01) speed = 0
-                } else {
-                    speed += (targetSpeed - speed) * 0.05 // Accelerate back
-                }
+        // Cache dimensions to avoid forced reflows
+        let totalWidth = container.scrollWidth
+        let singleSetWidth = totalWidth / 3
 
-                position -= speed
+        // Recalculate on resize
+        window.addEventListener(
+            'resize',
+            () => {
+                totalWidth = container.scrollWidth
+                singleSetWidth = totalWidth / 3
+            },
+            { passive: true },
+        )
 
-                // Check boundaries for infinite loop
-                const totalWidth = container.scrollWidth
-                const singleSetWidth = totalWidth / 3
-
-                if (Math.abs(position) >= singleSetWidth) {
-                    position += singleSetWidth
-                }
-
-                container.style.transform = `translateX(${position}px)`
-
-                requestAnimationFrame(animate)
+        function animate() {
+            // Smoothly adjust speed
+            if (isHovering) {
+                speed *= 0.95 // Decelerate
+                if (speed < 0.01) speed = 0
+            } else {
+                speed += (targetSpeed - speed) * 0.05 // Accelerate back
             }
 
-            container.addEventListener('mouseenter', () => {
-                isHovering = true
-            })
+            // Optimize: Stop animation if speed is negligible
+            if (
+                Math.abs(speed) < 0.001 &&
+                position ===
+                    parseFloat(
+                        container.style.transform
+                            .replace('translate3d(', '')
+                            .replace('px, 0, 0)', ''),
+                    )
+            ) {
+                animationFrameId = requestAnimationFrame(animate)
+                return
+            }
 
-            container.addEventListener('mouseleave', () => {
-                isHovering = false
-            })
+            position -= speed
 
-            // Start animation
-            requestAnimationFrame(animate)
+            if (Math.abs(position) >= singleSetWidth) {
+                position += singleSetWidth
+            }
+
+            // Use translate3d for GPU acceleration
+            container.style.transform = `translate3d(${position}px, 0, 0)`
+
+            animationFrameId = requestAnimationFrame(animate)
         }
+
+        container.addEventListener('mouseenter', () => {
+            isHovering = true
+        })
+
+        container.addEventListener('mouseleave', () => {
+            isHovering = false
+        })
+
+        // Use IntersectionObserver to pause when off-screen
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // Recalculate dimensions in case content changed while hidden
+                        totalWidth = container.scrollWidth
+                        singleSetWidth = totalWidth / 3
+
+                        if (!animationFrameId) {
+                            animate()
+                        }
+                    } else {
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId)
+                            animationFrameId = 0
+                        }
+                    }
+                })
+            },
+            { threshold: 0 },
+        )
+
+        observer.observe(container)
     }
 
     // Run on initial load and after every navigation

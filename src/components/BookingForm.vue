@@ -74,13 +74,14 @@ const submitReservation = async () => {
           <!-- Name -->
           <div class="relative group">
             <input 
+              id="booking-name"
               v-model="form.name" 
               type="text" 
               required
               placeholder=" "
               class="peer w-full bg-transparent border-b border-gray-700 py-3 text-lunar-white focus:outline-none focus:border-lunar-gold transition-colors"
             />
-            <label class="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:-top-4 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
+            <label for="booking-name" class="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:-top-4 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
               {{ t('booking.label.name') }}
             </label>
           </div>
@@ -88,13 +89,14 @@ const submitReservation = async () => {
           <!-- Email -->
           <div class="relative group">
             <input 
+              id="booking-email"
               v-model="form.email" 
               type="email" 
               required
               placeholder=" "
               class="peer w-full bg-transparent border-b border-gray-700 py-3 text-lunar-white focus:outline-none focus:border-lunar-gold transition-colors"
             />
-            <label class="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:-top-4 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
+            <label for="booking-email" class="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:-top-4 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
               {{ t('booking.label.email') }}
             </label>
           </div>
@@ -102,6 +104,7 @@ const submitReservation = async () => {
            <!-- Phone -->
            <div class="relative group">
             <input 
+              id="booking-phone"
               v-model="form.phone" 
               type="tel" 
               required
@@ -109,7 +112,7 @@ const submitReservation = async () => {
               pattern="[\+]?[0-9\s]{9,}"
               class="peer w-full bg-transparent border-b border-gray-700 py-3 text-lunar-white focus:outline-none focus:border-lunar-gold transition-colors"
             />
-            <label class="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:-top-4 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
+            <label for="booking-phone" class="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:-top-4 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
               {{ t('booking.label.phone') }}
             </label>
           </div>
@@ -120,6 +123,7 @@ const submitReservation = async () => {
            <!-- Date -->
            <div class="relative group">
             <input 
+              id="booking-date"
               v-model="form.date" 
               type="date" 
               required
@@ -127,12 +131,13 @@ const submitReservation = async () => {
               :max="maxDate"
               class="w-full bg-transparent border-b border-gray-700 py-3 text-lunar-white focus:outline-none focus:border-lunar-gold transition-colors appearance-none"
             />
-            <label class="absolute left-0 -top-4 text-xs text-gray-400 uppercase tracking-wider">{{ t('booking.label.date') }}</label>
+            <label for="booking-date" class="absolute left-0 -top-4 text-xs text-gray-400 uppercase tracking-wider">{{ t('booking.label.date') }}</label>
           </div>
 
           <!-- Time -->
            <div class="relative group">
             <select 
+                id="booking-time"
                 v-model="form.time" 
                 required
                 class="w-full bg-transparent border-b border-gray-700 py-3.5 text-lunar-white focus:outline-none focus:border-lunar-gold transition-colors [&>option]:bg-lunar-dark"
@@ -140,7 +145,7 @@ const submitReservation = async () => {
                 <option value="" disabled selected class="text-gray-500"></option>
                 <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
             </select>
-            <label class="absolute left-0 -top-4 text-xs text-gray-400 uppercase tracking-wider">{{ t('booking.label.time') }}</label>
+            <label for="booking-time" class="absolute left-0 -top-4 text-xs text-gray-400 uppercase tracking-wider">{{ t('booking.label.time') }}</label>
           </div>
 
           <!-- Guests -->
@@ -150,6 +155,7 @@ const submitReservation = async () => {
                     type="button"
                     @click="form.guests > 1 ? form.guests-- : null"
                     class="w-8 h-8 flex items-center justify-center text-lunar-gold hover:bg-lunar-gold/10 rounded-full transition-colors"
+                    aria-label="Decrease guests"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
@@ -160,6 +166,7 @@ const submitReservation = async () => {
                     type="button"
                     @click="form.guests < 10 ? form.guests++ : null"
                     class="w-8 h-8 flex items-center justify-center text-lunar-gold hover:bg-lunar-gold/10 rounded-full transition-colors"
+                    aria-label="Increase guests"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -173,12 +180,13 @@ const submitReservation = async () => {
         <!-- Note -->
         <div class="relative group pt-4">
             <textarea 
+              id="booking-note"
               v-model="form.note" 
               placeholder=" "
               rows="1"
               class="peer w-full bg-transparent border-b border-gray-700 py-2 text-lunar-white focus:outline-none focus:border-lunar-gold transition-colors resize-none"
             ></textarea>
-            <label class="absolute left-0 top-6 text-gray-500 text-sm transition-all peer-focus:top-0 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:top-0 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
+            <label for="booking-note" class="absolute left-0 top-6 text-gray-500 text-sm transition-all peer-focus:top-0 peer-focus:text-xs peer-focus:text-lunar-gold peer-valid:top-0 peer-valid:text-xs peer-valid:text-gray-400 cursor-text pointer-events-none">
               {{ t('booking.label.note') }}
             </label>
         </div>
