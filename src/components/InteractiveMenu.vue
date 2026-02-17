@@ -369,53 +369,66 @@ const groupedItems = computed(() => {
         leave-from-class="opacity-100" 
         leave-to-class="opacity-0"
       >
-        <div v-if="selectedItem" class="fixed inset-0 z-50 flex items-center justify-center p-4" @click.self="closeModal">
+        <div v-if="selectedItem" class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8" @click.self="closeModal">
           <!-- Backdrop -->
-          <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+          <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" @click="closeModal" @touchmove.prevent></div>
           
           <!-- Modal Content -->
-          <div class="relative bg-lunar-black border border-gray-800 w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col md:flex-row animate-scale-up">
-            <button @click="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10 p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="relative bg-lunar-black border border-gray-800 w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] shadow-2xl flex flex-col md:flex-row animate-scale-up overflow-hidden rounded-lg">
+            
+            <!-- Close Button -->
+            <button @click="closeModal" class="absolute top-4 right-4 z-20 p-2 text-white bg-black/50 hover:bg-black/80 rounded-full backdrop-blur-md transition-all duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
             <!-- Modal Image -->
-            <div class="w-full md:w-1/2 h-64 md:h-auto relative bg-neutral-900">
+            <div class="w-full md:w-1/2 h-48 md:h-auto shrink-0 relative bg-neutral-900 overflow-hidden">
                <img 
                  v-if="selectedItem.data.image" 
                  :src="typeof selectedItem.data.image === 'string' ? selectedItem.data.image : selectedItem.data.image.src" 
                  :alt="getLocContent(selectedItem, 'name')" 
                  class="w-full h-full object-cover" 
+                 loading="eager"
                />
                <div v-else class="w-full h-full flex items-center justify-center text-gray-600">{{ uiLabels.noImage }}</div>
             </div>
 
             <!-- Modal Details -->
-            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col">
-              <span class="text-lunar-gold text-sm uppercase tracking-[0.2em] mb-4">
-                {{ currentLang === 'en' && uiLabels.subcategories[selectedItem.data.subcategory || ''] ? uiLabels.subcategories[selectedItem.data.subcategory || ''] : (subcategoryLabels[selectedItem.data.subcategory || ''] || selectedItem.data.category) }}
-              </span>
-              <h2 class="text-4xl font-serif text-lunar-white mb-2">{{ getLocContent(selectedItem, 'name') }}</h2>
-              <div class="text-2xl text-lunar-gold font-light mb-8">{{ selectedItem.data.price }}</div>
-              
-              <div class="prose prose-invert prose-lg text-gray-300 font-light leading-relaxed mb-8 flex-grow">
-                {{ getLocContent(selectedItem, 'body') }}
-              </div>
+            <div class="w-full md:w-1/2 flex flex-col h-full overflow-hidden">
+              <div class="p-6 md:p-12 flex flex-col h-full overflow-hidden">
+                  <!-- Header Section (Fixed) -->
+                  <div class="shrink-0 mb-6">
+                    <div class="flex justify-between items-start">
+                        <span class="text-lunar-gold text-xs uppercase tracking-[0.2em] mb-2 block">
+                            {{ currentLang === 'en' && uiLabels.subcategories[selectedItem.data.subcategory || ''] ? uiLabels.subcategories[selectedItem.data.subcategory || ''] : (subcategoryLabels[selectedItem.data.subcategory || ''] || selectedItem.data.category) }}
+                        </span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-serif text-lunar-white mb-2 leading-tight">{{ getLocContent(selectedItem, 'name') }}</h2>
+                    <div class="text-xl text-lunar-gold font-light">{{ selectedItem.data.price }}</div>
+                  </div>
+                  
+                  <!-- Scrollable Description -->
+                  <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar overscroll-contain">
+                    <div class="prose prose-invert prose-sm md:prose-base text-gray-300 font-light leading-relaxed mb-6">
+                        {{ getLocContent(selectedItem, 'body') }}
+                    </div>
 
-              <!-- Allergens/Tags in Modal -->
-              <div v-if="selectedItem.data.allergens && selectedItem.data.allergens.length > 0">
-                <h4 class="text-xs uppercase text-gray-500 tracking-widest mb-3">{{ uiLabels.allergensTags }}</h4>
-                <div class="flex flex-wrap gap-2">
-                  <span 
-                    v-for="allergen in selectedItem.data.allergens" 
-                    :key="allergen"
-                    class="px-3 py-1 border border-lunar-gold/30 text-lunar-gold text-sm"
-                  >
-                    {{ allergen }}
-                  </span>
-                </div>
+                    <!-- Allergens/Tags in Modal -->
+                    <div v-if="selectedItem.data.allergens && selectedItem.data.allergens.length > 0" class="pt-4 border-t border-gray-800">
+                        <h4 class="text-[10px] uppercase text-gray-500 tracking-widest mb-3">{{ uiLabels.allergensTags }}</h4>
+                        <div class="flex flex-wrap gap-2">
+                        <span 
+                            v-for="allergen in selectedItem.data.allergens" 
+                            :key="allergen"
+                            class="px-2 py-1 border border-lunar-gold/30 text-lunar-gold text-xs uppercase tracking-wider bg-lunar-gold/5"
+                        >
+                            {{ allergen }}
+                        </span>
+                        </div>
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -437,6 +450,20 @@ const groupedItems = computed(() => {
 ::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
 }
 
 .animate-scale-up {
