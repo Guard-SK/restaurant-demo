@@ -111,23 +111,22 @@ const t = useTranslations(lang as keyof typeof ui)
 
 					<button
 						id="mobile-menu-btn"
-						class="text-lunar-white p-2"
-						aria-label="Open Menu"
+						class="text-lunar-white p-2 z-50 relative group"
+						aria-label="Toggle Menu"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							stroke="currentColor"
-							class="w-8 h-8"
+						<div
+							class="w-6 h-5 flex flex-col justify-between items-center transition-all duration-300"
 						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-							></path>
-						</svg>
+							<span
+								class="w-full h-0.5 bg-current transform transition-all duration-300"
+							></span>
+							<span
+								class="w-full h-0.5 bg-current transform transition-all duration-300"
+							></span>
+							<span
+								class="w-full h-0.5 bg-current transform transition-all duration-300"
+							></span>
+						</div>
 					</button>
 				</div>
 			</div>
@@ -138,25 +137,6 @@ const t = useTranslations(lang as keyof typeof ui)
 			id="mobile-menu-overlay"
 			class="fixed inset-0 bg-lunar-black z-40 transform translate-x-full transition-transform duration-500 flex flex-col justify-center items-center gap-8"
 		>
-			<button
-				id="close-menu-btn"
-				class="absolute top-8 right-6 text-lunar-white"
-				aria-label="Close Menu"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-8 h-8"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M6 18L18 6M6 6l12 12"></path>
-				</svg>
-			</button>
 			<a
 				href="#pribeh"
 				class="text-3xl font-serif text-lunar-white hover:text-lunar-gold transition-colors mobile-link"
@@ -188,7 +168,6 @@ const t = useTranslations(lang as keyof typeof ui)
 				>{t('nav.contact')}</a
 			>
 		</div>
-
 		<!-- Mobile Floating Booking Button -->
 		<a
 			href="#rezervacia"
@@ -235,17 +214,48 @@ const t = useTranslations(lang as keyof typeof ui)
 			// Mobile Menu Logic
 			document.addEventListener('astro:page-load', () => {
 				const menuBtn = document.getElementById('mobile-menu-btn')
-				const closeBtn = document.getElementById('close-menu-btn')
 				const overlay = document.getElementById('mobile-menu-overlay')
 				const links = document.querySelectorAll('.mobile-link')
+				const spans = menuBtn?.querySelectorAll('span')
 
 				function toggleMenu() {
+					const isOpen =
+						overlay?.classList.contains('translate-x-full')
+
 					overlay?.classList.toggle('translate-x-full')
 					document.body.classList.toggle('overflow-hidden')
+
+					// Animate Hamburger
+					if (isOpen) {
+						// Opening
+						spans?.[0].classList.add(
+							'rotate-45',
+							'translate-y-[9px]',
+						)
+						spans?.[1].classList.add('opacity-0')
+						spans?.[2].classList.add(
+							'-rotate-45',
+							'-translate-y-[9px]',
+						)
+						menuBtn?.classList.add('text-lunar-gold')
+						menuBtn?.classList.remove('text-lunar-white')
+					} else {
+						// Closing
+						spans?.[0].classList.remove(
+							'rotate-45',
+							'translate-y-[9px]',
+						)
+						spans?.[1].classList.remove('opacity-0')
+						spans?.[2].classList.remove(
+							'-rotate-45',
+							'-translate-y-[9px]',
+						)
+						menuBtn?.classList.remove('text-lunar-gold')
+						menuBtn?.classList.add('text-lunar-white')
+					}
 				}
 
 				menuBtn?.addEventListener('click', toggleMenu)
-				closeBtn?.addEventListener('click', toggleMenu)
 				links.forEach((link) =>
 					link.addEventListener('click', toggleMenu),
 				)
