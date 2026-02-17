@@ -318,7 +318,15 @@ const groupedItems = computed(() => {
                 class="w-full sm:w-32 h-32 bg-lunar-dark flex-shrink-0 overflow-hidden relative border border-gray-800 transition-all duration-300"
                 :class="item.data.featured ? 'border-lunar-gold shadow-[0_0_15px_rgba(212,175,55,0.15)]' : 'group-hover:border-lunar-gold/50'"
             >
-                <img v-if="item.data.image" :src="typeof item.data.image === 'string' ? item.data.image : item.data.image.src" :alt="getLocContent(item, 'name')" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100" />
+                <img 
+                    v-if="item.data.image" 
+                    :src="typeof item.data.image === 'string' ? item.data.image : item.data.image.src" 
+                    :alt="getLocContent(item, 'name')" 
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100" 
+                    loading="lazy"
+                    width="128"
+                    height="128"
+                />
                 <div v-else class="w-full h-full flex items-center justify-center text-gray-700">
                     <span class="text-xs uppercase tracking-widest">{{ uiLabels.noImage }}</span>
                 </div>

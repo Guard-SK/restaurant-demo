@@ -192,7 +192,7 @@ const schema = {
         </div>
 
         <InteractiveMenu
-            client:visible
+            client:idle
             items={menuItems}
             initialLang={lang as 'sk' | 'en'}
         />
@@ -223,7 +223,7 @@ const schema = {
         </div>
 
         <div class="relative z-10 px-6">
-            <BookingForm client:visible lang={lang as 'sk' | 'en'} />
+            <BookingForm client:idle lang={lang as 'sk' | 'en'} />
         </div>
     </section>
     <!-- CONTACT SECTION -->
