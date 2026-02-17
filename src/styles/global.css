@@ -48,7 +48,7 @@
     .btn-lunar {
         @apply relative overflow-hidden transition-all duration-300;
     }
-    
+
     .btn-lunar:hover {
         @apply transform -translate-y-1 shadow-lg shadow-lunar-gold/20;
     }
@@ -69,17 +69,31 @@
 
 /* Animations */
 @keyframes fade-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .animate-fade-in {
-    animation: fade-in 0.8s ease-out forwards;
+    animation: fade-in 0.8s ease-out both;
 }
 
 @keyframes title-reveal {
-    0% { transform: translateY(100%); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .reveal-text {

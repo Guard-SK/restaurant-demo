@@ -11,6 +11,7 @@ import { Image } from 'astro:assets'
 import ReviewCarousel from '../../components/ReviewCarousel.astro'
 import Gallery from '../../components/Gallery.astro'
 import HeroImg from '../../assets/hero.avif'
+import OpeningStatus from '../../components/OpeningStatus.vue'
 
 export function getStaticPaths() {
     return [{ params: { lang: 'sk' } }, { params: { lang: 'en' } }]
@@ -122,6 +123,8 @@ const schema = {
                     {t('hero.cta.menu')}
                 </a>
             </div>
+
+            <OpeningStatus client:load lang={lang as 'sk' | 'en'} />
         </div>
     </section>
 
@@ -217,7 +220,7 @@ const schema = {
         </div>
 
         <div class="relative z-10 px-6">
-            <BookingForm client:visible />
+            <BookingForm client:visible lang={lang as 'sk' | 'en'} />
         </div>
     </section>
     <!-- CONTACT SECTION -->
